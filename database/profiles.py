@@ -56,6 +56,22 @@ class Profiles(Database):
 
         self.commit()
 
+    def delete_by_tag(self, tag: str) -> Profile:
+        profile = Profile()
+        profile.tag = tag
+
+        return self.delete(profile.id)
+
+    def delete(self, profile_id: int) -> Profile:
+        exists = self.exists('profiles', 'id', profile_id)
+
+        if exists:
+            self.execute(f'DELETE from profiles WHERE id={profile_id}')
+
+            self.commit()
+
+        return self.get(profile_id)
+
     def get_all(self):
         profile_ids = self.select('profiles', 'id')
         if isinstance(profile_ids, int):

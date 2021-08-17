@@ -42,7 +42,7 @@ async def on_ready():
                 if timestamp <= profile.last_battle_timestamp:
                     break
 
-                if battle_log['battle']['type'] == 'challenge':
+                if 'type' in battle_log['battle'] and battle_log['battle']['type'] == 'challenge':
                     continue
 
                 game_mode = battle_log['event']['mode']
@@ -59,12 +59,7 @@ async def on_ready():
 
                 own_player = None
                 own_team = None
-                if game_mode == 'soloShowdown':
-                    for player in battle_log['battle']['players']:
-                        if player['tag'][1:] == profile.tag:
-                            own_player = player
-                            break
-                else:
+                if 'teams' in battle_log['battle']:
                     for team in battle_log['battle']['teams']:
                         for player in team:
                             if player['tag'][1:] == profile.tag:
@@ -73,16 +68,27 @@ async def on_ready():
                                 break
                         if own_team is not None:
                             break
+                elif 'players' in battle_log['battle']:
+                    for player in battle_log['battle']['players']:
+                        if player['tag'][1:] == profile.tag:
+                            own_player = player
+                            break
 
                 player_name = own_player['name']
                 brawler_name = own_player['brawler']['name']
-                brawler_trophies = own_player['brawler']['trophies']
+                brawler_trophies = None
+                if 'trophies' in own_player['brawler']:
+                    brawler_trophies = own_player['brawler']['trophies']
 
                 minutes_ago = int((datetime.utcnow().timestamp() - timestamp) / 60)
 
                 embed = discord.Embed()
                 embed.description = f'Игрок замечен в игре!\n'
-                embed.description += f'**{player_name}** играл на **{brawler_name}** на **{brawler_trophies}** кубках\n'
+                embed.description += f'**{player_name}** играл на **{brawler_name}**'
+                
+                if brawler_trophies is not None:
+                    embed.description += f' на **{brawler_trophies}** кубках'
+                embed.description += '\n'
 
                 embed.description += f'Информация матча: \n'
                 embed.description += f'Режим: **{add_spaces(game_mode)}**\n'
@@ -93,16 +99,23 @@ async def on_ready():
                     for player in own_team:
                         teammate_player_name = player['name']
                         teammate_brawler_name = player['brawler']['name'].capitalize()
-                        teammate_brawler_trophies = player['brawler']['trophies']
+                        
+                        teammate_brawler_trophies = None
+                        if 'trophies' in player['brawler']:
+                            teammate_brawler_trophies = player['brawler']['trophies']
 
-                        embed.description += f'**{teammate_brawler_name}** ({teammate_player_name}) ' \
-                                             f'**{teammate_brawler_trophies}** кубков\n'
+                        embed.description += f'**{teammate_brawler_name}** ({teammate_player_name}) '
+                        if teammate_brawler_trophies is not None:
+                            embed.description += f' на **{teammate_brawler_trophies}** кубков'
+                        embed.description += '\n'
 
                 embed.description += f'Результаты матча: \n'
                 embed.description += f'Время: **{minutes_ago} минут назад**\n'
                 embed.description += f'Результат: **{battle_result.upper()}**'
                 if trophy_change is not None:
                     embed.description += f' ({trophy_change} кубков)'
+                else:
+                    trophy_change = 0
 
                 embed.set_footer(text=f'Сегодня в {datetime.now().strftime("%H:%M")}')
 
