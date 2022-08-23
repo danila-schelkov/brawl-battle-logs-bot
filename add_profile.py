@@ -1,7 +1,7 @@
-from database.profiles import Profiles
+from database import profiles_database
 
-print('IMPORTANT! ВАЖНО!\nВыключи бота перед тем, как добавлять новый профиль.\n')
-tag = input('Введи тег: ').strip()
+if __name__ == '__main__':
+    print('IMPORTANT! ВАЖНО!\nВыключи бота перед тем, как добавлять новый профиль.\n')
+    tag = input('Введи тег: ')
 
-profiles = Profiles()
-profiles.create_by_tag(tag)
+    profiles_database.create_by_tag(tag)

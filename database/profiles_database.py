@@ -1,10 +1,11 @@
 from datetime import datetime
 
-from database import Database
+from .database import Database
 from models.profile import Profile
+from utilities import tag_to_id
 
 
-class Profiles(Database):
+class ProfilesDatabase(Database):
     def __init__(self):
         super().__init__(f'./{"database/" if __name__ != "__main__" else ""}profiles.db')
 
@@ -18,10 +19,9 @@ class Profiles(Database):
         }
 
     def create_by_tag(self, tag: str) -> Profile:
-        profile = Profile()
-        profile.tag = tag
+        high, low = tag_to_id(tag)
 
-        return self.create(profile.id)
+        return self.create((low << 8) + high)
 
     def create(self, profile_id: int) -> Profile:
         exists = self.exists('profiles', 'id', profile_id)
@@ -52,15 +52,14 @@ class Profiles(Database):
     def update(self, profile: Profile, **kwargs):
         super().update('profiles', [
             ('last_battle_timestamp', profile.last_battle_timestamp)
-        ], ('id', profile.id))
+        ], ('id', profile.get_id()))
 
         self.commit()
 
     def delete_by_tag(self, tag: str) -> Profile:
-        profile = Profile()
-        profile.tag = tag
+        high, low = tag_to_id(tag)
 
-        return self.delete(profile.id)
+        return self.delete((low << 8) + high)
 
     def delete(self, profile_id: int) -> Profile:
         exists = self.exists('profiles', 'id', profile_id)

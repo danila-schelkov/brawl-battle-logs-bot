@@ -1,7 +1,7 @@
-from database.profiles import Profiles
+from database import profiles_database
 
-print('IMPORTANT! ВАЖНО!\nВыключи бота перед тем, как добавлять новый профиль.\n')
-tag = input('Введи тег: ').strip()
+if __name__ == '__main__':
+    print('IMPORTANT! ВАЖНО!\nВыключи бота перед тем, как удалять профиль.\n')
+    tag = input('Введи тег: ')
 
-profiles = Profiles()
-profiles.delete_by_tag(tag)
+    profiles_database.delete_by_tag(tag)
