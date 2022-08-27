@@ -19,7 +19,7 @@ bot = commands.Bot('/', intents=intents)
 
 
 async def on_ready():
-    print(f'{bot.user.name} loaded in {time.time() - start_time:.2f}сек.')
+    print(f'{bot.user.name} loaded in {time.time() - start_time:.2f}sec.')
 
     if not config.initialized:
         config.initialized = True

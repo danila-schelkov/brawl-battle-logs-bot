@@ -13,29 +13,29 @@ class BattleLog:
     def get_battle_description(self,
                                own_player: dict,
                                own_team: list) -> tuple[str, int]:
-        description = f'Игрок замечен в игре!\n'
+        description = f'Player found in match!\n'
 
         player_name = own_player['name']
         brawler_name = own_player['brawler']['name']
-        description += f'**{player_name}** играл на **{brawler_name}**'
+        description += f'**{player_name}** played **{brawler_name}**'
         if 'trophies' in own_player['brawler']:
             brawler_trophies = own_player['brawler']['trophies']
-            description += f' на **{brawler_trophies}** кубках'
+            description += f' at **{brawler_trophies}** trophies'
 
         description += '\n\n'
 
-        description += f'Информация матча: \n'
+        description += f'Match info: \n'
 
         game_mode = self.event['mode']
-        description += f'Режим: **{add_spaces(game_mode)}**\n'
+        description += f'Mode: **{add_spaces(game_mode)}**\n'
 
         map_name = self.event['map']
-        description += f'Карта: **{map_name}**\n'
+        description += f'Map: **{map_name}**\n'
 
         description += '\n'
 
         if own_team is not None:
-            description += f'Команда:\n'
+            description += f'Team:\n'
             for player in own_team:
                 teammate_player_name = player['name']
                 teammate_brawler_name = player['brawler']['name'].capitalize()
@@ -46,21 +46,21 @@ class BattleLog:
 
                 description += f'**{teammate_brawler_name}** ({teammate_player_name}) '
                 if teammate_brawler_trophies is not None:
-                    description += f' на **{teammate_brawler_trophies}** кубков'
+                    description += f' at **{teammate_brawler_trophies}** trophies'
                 description += '\n'
 
             description += '\n'
 
-        description += f'Результаты матча: \n'
+        description += f'Match results: \n'
 
         minutes_ago = int((datetime.utcnow().timestamp() - self.start_timestamp) / 60)
-        description += f'Время: **{minutes_ago} минут назад**\n'
-        description += f'Результат: **{self.battle.get_result_text().upper()}**'
+        description += f'Time: **{minutes_ago} minutes ago**\n'
+        description += f'Result: **{self.battle.get_result_text().upper()}**'
 
         trophy_change = 0
         if self.battle.trophy_change is not None:
             trophy_change = self.battle.trophy_change
-            description += f' ({trophy_change} кубков)'
+            description += f' ({trophy_change} trophies)'
 
         return description, trophy_change
 
