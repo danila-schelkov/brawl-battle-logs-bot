@@ -1,4 +1,4 @@
-# brawl-battle-logs-bot
+# Brawl battle logs bot
 Discord bot that saves a new brawl battle logs.
 ___
 ## How to use

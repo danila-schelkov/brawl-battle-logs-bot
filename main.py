@@ -19,7 +19,7 @@ bot = commands.Bot('/', intents=intents)
 
 
 async def on_ready():
-    print(f'{bot.user.name} загружен за {time.time() - start_time:.2f}сек.')
+    print(f'{bot.user.name} loaded in {time.time() - start_time:.2f}сек.')
 
     if not config.initialized:
         config.initialized = True
@@ -66,7 +66,7 @@ async def check_new_battles():
 def create_battle_embed(description: str, battle_result: str, trophy_change: int) -> discord.Embed:
     embed = discord.Embed()
     embed.description = description
-    embed.set_footer(text=f'Сегодня в {datetime.now().strftime("%H:%M")}')
+    embed.set_footer(text=f'Today at {datetime.now().strftime("%H:%M")}')
     if battle_result == 'victory' or trophy_change > 0:
         embed.colour = discord.Color.dark_green()
     elif battle_result == 'defeat' or trophy_change < 0:

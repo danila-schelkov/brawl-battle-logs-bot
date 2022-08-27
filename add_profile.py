@@ -1,7 +1,7 @@
 from database import profiles_database
 
 if __name__ == '__main__':
-    print('IMPORTANT! ВАЖНО!\nВыключи бота перед тем, как добавлять новый профиль.\n')
-    tag = input('Введи тег: ')
+    print('IMPORTANT! Make sure your bot is not running!\n')
+    tag = input('Enter tag: ')
 
     profiles_database.create_by_tag(tag)
