@@ -31,7 +31,7 @@ class Battle:
 
     def get_result_text(self):
         if self._rank is not None:
-            return str(self._rank) + ' место'
+            return str(self._rank) + ' place'
 
         return self._result
 
